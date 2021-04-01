@@ -1,0 +1,205 @@
+## Java ===============================================================================================================
+#macro(list_item_base $index $value $separator)
+#if( $index == 1 )${value}#else${separator}${value}#end
+#end
+#macro(list_item $index $value)
+#list_item_base($index $value ", ")
+#end
+#macro(list_item_str $index $value)
+#if( $index == 1 )"${value}"#else, "${value}"#end
+#end
+#macro(param_decls $external_sql $params)
+#if ($external_sql == true)
+String sql#if(${params.size()} > 0), #end
+#end
+#foreach($param in ${params})#if(${velocityCount} == 1)${param.getType()} ${param.getName()}#else, ${param.getType()} ${param.getName()}#end#end
+#end
+#macro(param_decls_dto $external_sql)
+#if($external_sql == true)String sql, #end
+#end
+#macro(sql_var $is_external_sql $sql)
+#if (!${is_external_sql})
+        String sql = "${sql}";
+#end
+#end
+## ====================================================================================================================
+#if ($mode=="dto_class")
+package ${package};
+
+import javax.persistence.*;
+
+/*
+    ${class_name} is a generated DTO class. Don't modify it manually.
+    http://sqldalmaker.sourceforge.net
+
+ */
+@Table(name="${ref}")
+public class ${class_name} ${implements} {
+
+#foreach($f in ${fields})
+    @Column(name="${f.getColumnName()}")
+    private ${f.getType()} ${f.getName()};  // ${f.getComment()}
+#end
+#foreach($f in ${fields})
+
+    public ${f.getType()} ${f.getterMethod()}() {
+        return this.$f.getName();
+    }
+
+    public void ${f.setterMethod()}(${f.getType()} $f.getName()) {
+        this.$f.getName() = $f.getName();
+    }
+#end
+}## ====================================================================================================================
+#elseif($mode=="dao_class")
+package ${package};
+
+import com.sqldalmaker.DataStore;
+
+#foreach($imp in ${imports})
+import ${imp};
+#end
+
+/*
+    ${class_name} is a generated DAO class. Don't modify it manually.
+    http://sqldalmaker.sourceforge.net
+
+ */
+public class ${class_name} {
+
+    protected final DataStore ds;
+
+    public ${class_name}(DataStore ds) {
+        this.ds = ds;
+    }
+#foreach($method in ${methods})${method}#end
+}## ====================================================================================================================
+#elseif($mode=="dao_create")
+
+    /*
+        (C)RUD: ${table_name}
+        Generated values are passed to DTO.
+        Returns the number of affected rows or -1 on error.
+     */
+    public int ${method_name}(${dto_param} p) throws Exception {
+#sql_var(false $sql)
+        String []gen_col_nm = new String[] {#foreach ($key in ${keys})#list_item_str(${velocityCount} ${key.getColumnName()})#end};
+        Object []gen_values = new Object[gen_col_nm.length];
+        int res = ds.insert(sql, gen_col_nm, gen_values#foreach($param in ${params}), p.${param.getterMethod()}()#end);
+#foreach ($key in ${keys})
+#set($i = ${velocityCount} - 1)
+        p.${key.setterMethod()}(ds.castGeneratedValue(${key.getType()}.class, gen_values[${i}]));
+#end
+        return res;
+    }
+## ====================================================================================================================
+#elseif($mode=="dao_query")
+
+#if($crud)
+    /*
+        C(R)UD: ${ref}
+     */
+#end
+#if($fetch_list)
+#set($tmp = $imports.add("java.util.List"))
+    public List<${returned_type_name}> ${method_name}(#if(${dto_param} != "")#param_decls_dto($is_external_sql)${dto_param} p#else#param_decls($is_external_sql $params)#end) throws Exception {
+#sql_var($is_external_sql $sql)
+#if($use_dto)
+        return ds.queryDtoList(sql, new DataStore.RowHandler<${returned_type_name}>() {
+            @Override
+            public ${returned_type_name} handleRow(DataStore.RowData rd) throws Exception {
+                ${returned_type_name} obj = new ${returned_type_name}();
+#foreach($f in ${fields})
+#set($i = ${velocityCount} - 1)
+                obj.${f.setterMethod()}(rd.getValue(${f.getType()}.class, "${f.getColumnName()}"));  // ${f.getComment()}
+#end
+                return obj;
+            }
+        }#if(${dto_param} != "")#foreach($param in ${params}), p.${param.getterMethod()}()#end);#else#foreach($param in ${params}), ${param.getName()}#end);
+#end
+#else
+#if(${dto_param} != "")    
+        return ds.queryList(${returned_type_name}.class, sql#foreach($param in ${params}), p.${param.getterMethod()}()#end);
+#else
+        return ds.queryList(${returned_type_name}.class, sql#foreach($param in ${params}), ${param.getName()}#end);
+#end
+#end
+    }
+#else
+    public ${returned_type_name} ${method_name}(#if(${dto_param} != "")#param_decls_dto($is_external_sql)${dto_param} p#else#param_decls($is_external_sql $params)#end) throws Exception {
+#sql_var($is_external_sql $sql)
+#if($use_dto)
+        return ds.queryDto(sql, new DataStore.RowHandler<${returned_type_name}>() {
+            @Override
+            public ${returned_type_name} handleRow(DataStore.RowData rd) throws Exception {
+                ${returned_type_name} res = new ${returned_type_name}();
+#foreach($f in ${fields})
+#set($i = ${velocityCount} - 1)
+                res.${f.setterMethod()}(rd.getValue(${f.getType()}.class, "${f.getColumnName()}"));  // ${f.getComment()}
+#end
+                return res;
+            }
+        }#if(${dto_param} != "")#foreach($param in ${params}), p.${param.getterMethod()}()#end);#else#foreach($param in ${params}), ${param.getName()}#end);
+#end
+#else
+#if(${dto_param} != "")    
+        return ds.query(${returned_type_name}.class, sql#foreach($param in ${params}), p.${param.getterMethod()}()#end);
+#else
+        return ds.query(${returned_type_name}.class, sql#foreach($param in ${params}), ${param.getName()}#end);
+#end    
+#end
+    }
+#end
+## ====================================================================================================================
+#elseif($mode=="dao_exec_dml")
+#if(${dto_param} != "")
+
+    /*
+#if($method_type == "CREATE")
+        (C)RUD: ${table_name}
+#elseif($method_type == "UPDATE")
+        CR(U)D: ${table_name}
+#elseif($method_type == "DELETE")
+        CRU(D): ${table_name}
+#end
+        Returns the number of affected rows or -1 on error.
+     */
+    public int ${method_name}(#param_decls_dto($is_external_sql)${dto_param} p) throws Exception {
+#sql_var($is_external_sql $sql)
+        return ds.execDML(sql#foreach($param in ${params}), p.${param.getterMethod()}()#end);
+    }
+#end
+#if($plain_params)
+
+    /*
+#if($method_type == "CREATE")
+        (C)RUD: ${table_name}
+#elseif($method_type == "UPDATE")
+        CR(U)D: ${table_name}
+#elseif($method_type == "DELETE")
+        CRU(D): ${table_name}
+#end
+        Returns the number of affected rows or -1 on error.
+     */
+    public int ${method_name}(#param_decls($is_external_sql $params)) throws Exception {
+#sql_var($is_external_sql $sql)
+#foreach($m in ${mappings})
+        RowHandler2 ${m.get_exec_dml_param_name()} = new RowHandler2() {
+            @Override
+            public void handleRow(RowData rd) throws Exception {
+                ${m.get_dto_class_name()} obj = new ${m.get_dto_class_name()}();
+#foreach($f in ${m.get_fields()})
+                obj.${f.setterMethod()}(rd.getValue(${f.getType()}.class, "${f.getColumnName()}"));  // ${f.getComment()}
+#end
+                ${m.get_method_param_name()}.handle(obj);
+            }
+        };
+#end
+#if ($method_type == "UPDATE" || $method_type == "DELETE")
+        return ds.execDML(sql#foreach($param in ${params}), ${param.getName()}#end);
+#else
+        return ds.execDML(sql#foreach($param in ${params2}), ${param.getName()}#end);
+#end
+    }
+#end
+#end

@@ -1,0 +1,46 @@
+body {
+    font-family: Verdana,Arial,sans-serif;
+    font-size: small;
+}
+
+#root {
+    vertical-align: top;
+}
+
+td {
+    vertical-align: top;
+}
+
+#left {
+    padding: 0px;
+/*
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid #AAAAAA;
+    color: #222222;
+*/
+    margin-right: 20px;
+}
+
+.group {
+    padding: 6px;
+    border-radius: 4px 4px 4px 4px;
+    border: 1px solid #AAAAAA;
+    color: #222222;
+    margin-bottom: 10px;
+}
+
+div.ui-datatable {
+    font-size: small;
+}
+
+table.borders {
+    border-top: 1px solid #AAAAAA;
+    border-left: 1px solid #AAAAAA;
+    margin-bottom: 20px;
+}
+
+table.borders td {
+    border-right: 1px solid #AAAAAA;
+    border-bottom: 1px solid #AAAAAA;
+    padding: 8px;
+}

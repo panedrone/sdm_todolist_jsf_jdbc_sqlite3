@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:view id="index.xhtml" contentType="text/html">
+    <ui:composition template="page_template.xhtml">
+        <ui:param name="pageTitle" value="Users table"/>
+        <ui:define name="pageContext">
+
+            <h:form id="form">
+                <h:panelGrid columns="2">
+                    <h:panelGroup>
+                        <h:panelGrid columns="2">
+                            <p:commandLink value="+" oncomplete="addGroupDialog.show()"/>
+                            <h:outputText value=""/>
+                        </h:panelGrid>
+                        <p:dataTable
+                                value="#{todoListBean.groups}"
+                                var="group"
+                                id="groupsTable">
+                            <p:column headerText="Project">
+                                <p:commandLink id="showTasksButton" update=":form:tasksDisplay"
+                                               value="#{group.GName}">
+                                    <f:setPropertyActionListener value="#{group}"
+                                                                 target="#{todoListBean.clickedGroup}"/>
+                                </p:commandLink>
+
+                            </p:column>
+                            <p:column headerText="Tasks Count">
+                                <h:outputText value="#{group.tasksCount}"/>
+                            </p:column>
+                            <p:column headerText="">
+                                <p:commandLink id="updateGroupButton" update=":form:updateGroupDialogDisplay"
+                                               oncomplete="updateGroupDialog.show()"
+                                               value="u">
+                                    <f:setPropertyActionListener value="#{group}"
+                                                                 target="#{todoListBean.selectedGroup}"/>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column headerText="">
+                                <p:commandLink id="delButton" update=":form:deleteGroupDialogDisplay"
+                                               oncomplete="deleteGroupDialog.show()"
+                                               value="d">
+                                    <f:setPropertyActionListener value="#{group}"
+                                                                 target="#{todoListBean.selectedGroup}"/>
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+                    <h:panelGroup id="tasksDisplay">
+                        <c:choose>
+                            <c:when test="#{todoListBean.clickedGroup.GId!=null}">
+                                <h:panelGrid columns="2">
+                                    <p:commandLink value="+" oncomplete="addTaskDialog.show()"/>
+                                    <h:outputText value="#{todoListBean.clickedGroup.GName}"/>
+                                </h:panelGrid>
+                                <h:panelGroup>
+                                    <p:dataTable
+                                            value="#{todoListBean.tasks}"
+                                            var="task"
+                                            id="tasksTable">
+                                        <p:column headerText="Creation Date">
+                                            <h:outputText value="#{task.TDate}"/>
+                                        </p:column>
+                                        <p:column headerText="Priority">
+                                            <h:outputText value="#{task.TPriority}"/>
+                                        </p:column>
+                                        <p:column headerText="Subject">
+                                            <p:commandLink id="updateTaskButton" update=":form:updateTaskDialogDisplay"
+                                                           oncomplete="updateTaskDialog.show()"
+                                                           value="#{task.TSubject}">
+                                                <f:setPropertyActionListener value="#{task}"
+                                                                             target="#{todoListBean.selectedTask}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                        <p:column headerText="">
+                                            <p:commandLink id="deleteTaskButton" update=":form:deleteTaskDialogDisplay"
+                                                           oncomplete="deleteTaskDialog.show()"
+                                                           value="d">
+                                                <f:setPropertyActionListener value="#{task}"
+                                                                             target="#{todoListBean.selectedTask}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGroup>
+                            </c:when>
+                            <c:otherwise>
+                            </c:otherwise>
+                        </c:choose>
+                    </h:panelGroup>
+                </h:panelGrid>
+                <p:dialog modal="true" widgetVar="addGroupDialog" resizable="false" width="360" header="New Project">
+                    <h:panelGrid columns="2" id="addGroupDialogDisplay">
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Project Name"/>
+                            <h:inputText value="#{todoListBean.newGroup.GName}" immediate="true"/>
+                            <h:commandButton value="Create" actionListener="#{todoListBean.createNew}" onclick=""/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog modal="true" widgetVar="updateGroupDialog" resizable="false" width="360"
+                          header="Rename Project">
+                    <h:panelGrid columns="1" id="updateGroupDialogDisplay">
+                        <h:outputText value="Group name"/>
+                        <h:inputText value="#{todoListBean.selectedGroup.GName}"/>
+                        <h:panelGroup>
+                            <h:commandButton actionListener="#{todoListBean.updateSelected}" value="Save"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog modal="true" widgetVar="deleteGroupDialog" resizable="false" width="360"
+                          header="Delete Project?">
+                    <h:panelGrid columns="1" id="deleteGroupDialogDisplay">
+                        <h:outputText value="#{todoListBean.selectedGroup.GName}"/>
+                        <h:panelGroup>
+                            <h:commandButton actionListener="#{todoListBean.deleteSelected}" value="Confirm"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:dialog>
+
+                <p:dialog modal="true" widgetVar="addTaskDialog" resizable="false" width="360" header="New Task">
+                    <h:panelGrid columns="1" id="addTaskDialogDisplay">
+                        <h:outputText value="Priority"/>
+                        <h:inputText value="#{todoListBean.newTask.TPriority}"/>
+                        <h:outputText value="Subject"/>
+                        <h:inputText value="#{todoListBean.newTask.TSubject}" maxlength="200"/>
+                        <h:outputText value="Comments"/>
+                        <p:inputTextarea value="#{todoListBean.newTask.TComments}" cols="20" rows="10"
+                                         autoResize="false"/>
+                        <h:commandButton value="Create" actionListener="#{todoListBean.createTask}" onclick=""/>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog modal="true" widgetVar="updateTaskDialog" resizable="false" width="360"
+                          header="Edit Task">
+                    <h:panelGrid columns="1" id="updateTaskDialogDisplay">
+                        <h:outputText value="Priority"/>
+                        <h:inputText value="#{todoListBean.selectedTask.TPriority}"/>
+                        <h:outputText value="Subject"/>
+                        <h:inputText value="#{todoListBean.selectedTask.TSubject}" maxlength="200"/>
+                        <h:outputText value="Comments"/>
+                        <p:inputTextarea value="#{todoListBean.selectedTask.TComments}" cols="20" rows="10"
+                                         autoResize="false"/>
+                        <h:panelGroup>
+                            <h:commandButton actionListener="#{todoListBean.updateSelectedTask}" value="Save"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:dialog>
+                <p:dialog modal="true" widgetVar="deleteTaskDialog" resizable="false" width="360"
+                          header="Delete Task?">
+                    <h:panelGrid columns="1" id="deleteTaskDialogDisplay">
+                        <h:outputText value="#{todoListBean.selectedTask.TSubject}"/>
+                        <h:panelGroup>
+                            <h:commandButton actionListener="#{todoListBean.deleteSelectedTask}" value="Confirm"/>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+
+
+        </ui:define>
+    </ui:composition>
+
+
+</f:view>
+</html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dto-classes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:noNamespaceSchemaLocation="dto.xsd">
+
+    <dto-class name="Group" ref="get_groups.sql">
+        <field java-type="Integer" column="g_id"/>
+        <field java-type="String" column="g_name"/>
+        <field java-type="Integer" column="tasks_count"/>
+    </dto-class>
+    
+    <dto-class name="Task" ref="tasks"/>
+	
+</dto-classes>

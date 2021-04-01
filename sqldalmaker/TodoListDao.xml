@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dao-class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="dao.xsd">
+
+    <crud table="groups" dto="Group">
+        <create method="createGroup"/>
+        <update method="updateGroup"/>
+        <delete method="deleteGroup"/>
+    </crud>
+
+    <query-dto-list ref="get_groups.sql" dto="Group" method="getGroups()"/>
+
+    <crud table="TASKS" dto="Task">
+        <create method="createTask"/>
+        <update method="updateTask"/>
+        <delete method="deleteTask"/>
+    </crud>
+
+    <query-dto-list ref="get_group_tasks.sql" dto="Task" method="getGroupTasks(int t_id)"/>
+
+</dao-class>

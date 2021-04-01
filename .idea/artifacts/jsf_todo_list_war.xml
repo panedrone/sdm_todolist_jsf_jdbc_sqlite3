@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="jsf-todo-list:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="todo_list-1.0.war">
+      <element id="artifact" artifact-name="jsf-todo-list:war exploded" />
+    </root>
+  </artifact>
+</component>
