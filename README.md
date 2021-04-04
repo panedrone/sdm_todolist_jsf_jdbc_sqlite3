@@ -1,5 +1,5 @@
 # sdm.demo.jsf.sqlite3.todolist
-Simple JSF Application to demonstrate possibilities of SQL DAL Maker + Java/JDBC. 
+Demo of how to use SQL DAL Maker + Java/JSF/JDBC. 
 
 ![demo-jsf-1.png](demo-jsf-1.png)
 
