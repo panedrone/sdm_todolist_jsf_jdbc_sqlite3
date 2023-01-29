@@ -3,9 +3,9 @@
              xsi:noNamespaceSchemaLocation="dto.xsd">
 
     <dto-class name="Group" ref="get_groups.sql">
-        <field java-type="Integer" column="g_id"/>
-        <field java-type="String" column="g_name"/>
-        <field java-type="Integer" column="tasks_count"/>
+        <field type="Integer" column="g_id"/>
+        <field type="String" column="g_name"/>
+        <field type="Integer" column="tasks_count"/>
     </dto-class>
     
     <dto-class name="Task" ref="tasks"/>

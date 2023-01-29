@@ -23,11 +23,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="todo_list" />
-        <module name="sdm.demo.jsf.sqlite3.todolist" />
+        <module name="sdm_demo_jsf_todolist" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="sdm.demo.jsf.sqlite3.todolist" target="1.8" />
+      <module name="sdm_demo_jsf_todolist" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
