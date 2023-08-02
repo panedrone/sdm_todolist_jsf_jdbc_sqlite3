@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="sdm_demo_jsf_todolist:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>false</exploded>
+        <module>sdm_demo_jsf_todolist</module>
+        <packaging>war</packaging>
+        <unpackNestedArchives>false</unpackNestedArchives>
+      </options>
+    </properties>
+    <root id="archive" name="todo_list-1.0.war">
+      <element id="artifact" artifact-name="sdm_demo_jsf_todolist:war exploded" />
+    </root>
+  </artifact>
+</component>

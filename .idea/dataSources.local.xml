@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal">
+  <component name="dataSourceStorageLocal" created-in="IU-212.5284.40">
     <data-source name="H2 - todo_list" uuid="e0a42a82-33c0-41fd-87a8-30b40e734378">
-      <secret-storage>memory</secret-storage>
+      <database-info product="H2" version="1.3.157 (2011-06-25)" jdbc-version="3.0" driver-name="H2 JDBC Driver" driver-version="1.3.157 (2011-06-25)" dbms="H2" exact-version="1.3.157">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="TODO_LIST">
+            <node kind="schema">
+              <name qname="INFORMATION_SCHEMA" />
+              <name qname="PUBLIC" />
+            </node>
+          </node>
+        </introspection-scope>
+      </schema-mapping>
     </data-source>
   </component>
 </project>
