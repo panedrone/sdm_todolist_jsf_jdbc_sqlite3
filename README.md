@@ -53,7 +53,7 @@ TasksDao.xml
 </dao-class>
 ```
 
-Generated code in action:
+Generated DAO class:
 
 ```java
 public class GroupsDao {
