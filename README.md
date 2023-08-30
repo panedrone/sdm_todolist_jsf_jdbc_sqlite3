@@ -26,9 +26,9 @@ GroupsDao.xml
 <dao-class>
 
     <crud dto="Group">
-        <create method="createGroup"/>
-        <update method="updateGroup"/>
-        <delete method="deleteGroup"/>
+        <create/>
+        <update/>
+        <delete/>
     </crud>
 
     <query-dto-list ref="get_groups.sql" dto="Group" method="getGroups()"/>
@@ -43,9 +43,9 @@ TasksDao.xml
 <dao-class>
 
     <crud dto="Task">
-        <create method="createTask"/>
-        <update method="updateTask"/>
-        <delete method="deleteTask"/>
+        <create/>
+        <update/>
+        <delete/>
     </crud>
 
     <query-dto-list ref="get_group_tasks.sql" dto="Task" method="getGroupTasks(int t_id)"/>

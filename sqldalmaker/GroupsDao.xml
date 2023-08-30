@@ -3,9 +3,9 @@
            xsi:noNamespaceSchemaLocation="dao.xsd">
 
     <crud dto="Group">
-        <create method="createGroup"/>
-        <update method="updateGroup"/>
-        <delete method="deleteGroup"/>
+        <create/>
+        <update/>
+        <delete/>
     </crud>
 
     <query-dto-list ref="get_groups.sql" dto="Group" method="getGroups()"/>
