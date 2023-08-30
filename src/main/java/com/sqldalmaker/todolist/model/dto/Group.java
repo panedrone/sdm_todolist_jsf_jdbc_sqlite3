@@ -5,9 +5,9 @@ package com.sqldalmaker.todolist.model.dto;
 
 public class Group  {
 
-    private Integer gId;  // q
-    private String gName;  // q
-    private Integer tasksCount;  // q
+    private Integer gId;  // t
+    private String gName;  // t
+    private Integer gTasksCount;  // xml(g_tasks_count)
 
     public Integer getGId() {
         return this.gId;
@@ -25,11 +25,11 @@ public class Group  {
         this.gName = gName;
     }
 
-    public Integer getTasksCount() {
-        return this.tasksCount;
+    public Integer getGTasksCount() {
+        return this.gTasksCount;
     }
 
-    public void setTasksCount(Integer tasksCount) {
-        this.tasksCount = tasksCount;
+    public void setGTasksCount(Integer gTasksCount) {
+        this.gTasksCount = gTasksCount;
     }
 }

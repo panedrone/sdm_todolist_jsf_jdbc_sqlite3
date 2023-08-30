@@ -1,6 +1,8 @@
 package com.sqldalmaker;
 
-import com.sqldalmaker.todolist.model.dao.TodoListDao;
+import com.sqldalmaker.todolist.model.dao.GroupsDao;
+import com.sqldalmaker.todolist.model.dao.TasksDao;
+
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -19,8 +21,12 @@ import javax.sql.DataSource;
  */
 public class DataStoreManager {
 
-    public TodoListDao createTodoListDao() {
-        return new TodoListDao(ds);
+    public GroupsDao createGroupsDao() {
+        return new GroupsDao(ds);
+    }
+
+    public TasksDao createTasksDao() {
+        return new TasksDao(ds);
     }
 
     public static class OutParam<T> {

@@ -1,7 +1,8 @@
 package com.sqldalmaker.todolist.service;
 
 import com.sqldalmaker.DataStoreManager;
-import com.sqldalmaker.todolist.model.dao.TodoListDao;
+import com.sqldalmaker.todolist.model.dao.GroupsDao;
+import com.sqldalmaker.todolist.model.dao.TasksDao;
 import com.sqldalmaker.todolist.model.dto.*;
 import java.text.SimpleDateFormat;
 
@@ -21,19 +22,21 @@ public class TodoListService {
 
     public void setDatastoreManager(DataStoreManager datastoreManager) {
         this.dm = datastoreManager;
-        dao = dm.createTodoListDao();
+        g_dao = dm.createGroupsDao();
+        t_dao = dm.createTasksDao();
     }
 
-    private TodoListDao dao;
+    private GroupsDao g_dao;
+    private TasksDao t_dao;
 
     public List<Group> getGroups() throws Exception {
-        return dao.getGroups();
+        return g_dao.getGroups();
     }
 
     public void createGroup(Group gr) throws Exception {
         dm.begin();
         try {
-            int res = dao.createGroup(gr);
+            int res = g_dao.createGroup(gr);
             if (res == 0) {
                 throw new Exception("Cannot create Project");
             }
@@ -47,7 +50,7 @@ public class TodoListService {
     public void updateGroup(Group project) throws Exception {
         dm.begin();
         try {
-            int res = dao.updateGroup(project);
+            int res = g_dao.updateGroup(project);
             if (res == 0) {
                 throw new Exception("Cannot update Project: " + project.getGId());
             }
@@ -61,7 +64,7 @@ public class TodoListService {
     public void deleteGroup(Group project) throws Exception {
         dm.begin();
         try {
-            int res = dao.deleteGroup(project.getGId());
+            int res = g_dao.deleteGroup(project.getGId());
             if (res == 0) {
                 throw new Exception("Cannot delete Project: " + project.getGId());
             }
@@ -73,13 +76,13 @@ public class TodoListService {
     }
 
     public List<Task> getGroupTasks(Group group) throws Exception {
-        return dao.getGroupTasks(group.getGId());
+        return t_dao.getGroupTasks(group.getGId());
     }
 
     public void updateTask(Task task) throws Exception {
         dm.begin();
         try {
-            int res = dao.updateTask(task);
+            int res = t_dao.updateTask(task);
             if (res == 0) {
                 throw new Exception("Cannot update task, t_id: " + task.getTId());
             }
@@ -93,7 +96,7 @@ public class TodoListService {
     public void deleteTask(Task task) throws Exception {
         dm.begin();
         try {
-            int res = dao.deleteTask(task.getTId());
+            int res = t_dao.deleteTask(task.getTId());
             if (res == 0) {
                 throw new Exception("Cannot delete task, t_id: " + task.getTId());
             }
@@ -110,7 +113,7 @@ public class TodoListService {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             String dateString = format.format(new Date());
             task.setTDate(dateString); // today
-            int res = dao.createTask(task);
+            int res = t_dao.createTask(task);
             if (res == 0) {
                 throw new Exception("Cannot create task");
             }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dao-class xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="dao.xsd">
+
+    <crud dto="Group">
+        <create method="createGroup"/>
+        <update method="updateGroup"/>
+        <delete method="deleteGroup"/>
+    </crud>
+
+    <query-dto-list ref="get_groups.sql" dto="Group" method="getGroups()"/>
+
+</dao-class>
