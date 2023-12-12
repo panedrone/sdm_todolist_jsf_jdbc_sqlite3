@@ -4,55 +4,46 @@ Quick Demo of how to use [SQL DAL Maker](https://github.com/panedrone/sqldalmake
 
 ![demo-jsf-1.png](demo-jsf-1.png)
 
-dto.xml
+sdm.xml
 
 ```xml
 
-<dto-classes>
+<sdm>
 
     <dto-class name="Group" ref="groups">
+
         <field type="Integer" column="g_tasks_count"/>
+
     </dto-class>
 
     <dto-class name="Task" ref="tasks"/>
 
-</dto-classes>
+    <dao-class name="GroupsDao">
+
+        <crud dto="Group">
+            <create/>
+            <update/>
+            <delete/>
+        </crud>
+
+        <query-dto-list ref="get_groups.sql" dto="Group" method="getGroups()"/>
+
+    </dao-class>
+
+    <dao-class name="TasksDao">
+
+        <crud dto="Task">
+            <create/>
+            <update/>
+            <delete/>
+        </crud>
+
+        <query-dto-list ref="get_group_tasks.sql" dto="Task" method="getGroupTasks(int t_id)"/>
+
+    </dao-class>
+
+</sdm>
 ```
-
-GroupsDao.xml
-
-```xml
-
-<dao-class>
-
-    <crud dto="Group">
-        <create/>
-        <update/>
-        <delete/>
-    </crud>
-
-    <query-dto-list ref="get_groups.sql" dto="Group" method="getGroups()"/>
-
-</dao-class>
-```
-
-TasksDao.xml
-
-```xml
-
-<dao-class>
-
-    <crud dto="Task">
-        <create/>
-        <update/>
-        <delete/>
-    </crud>
-
-    <query-dto-list ref="get_group_tasks.sql" dto="Task" method="getGroupTasks(int t_id)"/>
-
-</dao-class>
-```
-
 Generated DAO class:
 
 ```java

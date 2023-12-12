@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sdm xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="sdm.xsd">
+
+    <dto-class name="Group" ref="groups">
+
+        <field type="Integer" column="g_tasks_count"/>
+
+    </dto-class>
+
+    <dto-class name="Task" ref="tasks"/>
+
+    <dao-class name="GroupsDao">
+
+        <crud dto="Group">
+            <create/>
+            <update/>
+            <delete/>
+        </crud>
+
+        <query-dto-list ref="get_groups.sql" dto="Group" method="getGroups()"/>
+
+    </dao-class>
+
+    <dao-class name="TasksDao">
+
+        <crud dto="Task">
+            <create/>
+            <update/>
+            <delete/>
+        </crud>
+
+        <query-dto-list ref="get_group_tasks.sql" dto="Task" method="getGroupTasks(int t_id)"/>
+
+    </dao-class>
+
+</sdm>
