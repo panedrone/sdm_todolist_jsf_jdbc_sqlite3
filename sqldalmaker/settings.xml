@@ -10,7 +10,7 @@
 
     <ide event-log="true"/>
     
-    <jdbc jar="sqldalmaker/sqlite-jdbc-3.42.0.0.jar" class="org.sqlite.JDBC"
+    <jdbc jar="sqldalmaker/sqlite-jdbc-3.44.1.0.jar" class="org.sqlite.JDBC"
           url="jdbc:sqlite:$PROJECT_DIR$/src/main/webapp/todo-list.sqlite" user="" pwd="" />
 
     <type-map default="">
