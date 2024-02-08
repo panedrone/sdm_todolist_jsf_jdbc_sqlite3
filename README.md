@@ -1,4 +1,4 @@
-# sdm_demo_jsf_todolist
+# sdm_todolist_java_jsf_jdbc_sqlite3
 
 A project demonstrating how to use [SQL DAL Maker](https://github.com/panedrone/sqldalmaker) + Java/JDBC/JSF.
 
