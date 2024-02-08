@@ -1,6 +1,6 @@
 # sdm_todolist_java_jsf_jdbc_sqlite3
 
-A project demonstrating how to use [SQL DAL Maker](https://github.com/panedrone/sqldalmaker) + Java/JDBC/JSF.
+JSF SPA demonstrating how to use [SQL DAL Maker](https://github.com/panedrone/sqldalmaker) + Java/JDBC/Sqlite3.
 
 ![demo-jsf-1.png](demo-jsf-1.png)
 
