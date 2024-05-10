@@ -66,12 +66,12 @@ public class TasksDao {
             @Override
             public void handleRow(DataStore.RowData rd) throws Exception {
                 Task obj = new Task();
-                obj.setTId(rd.getValue(Integer.class, "t_id"));  // t <- q
-                obj.setGId(rd.getValue(Integer.class, "g_id"));  // t <- q
-                obj.setTPriority(rd.getValue(Integer.class, "t_priority"));  // t <- q
-                obj.setTDate(rd.getValue(String.class, "t_date"));  // t <- q
-                obj.setTSubject(rd.getValue(String.class, "t_subject"));  // t <- q
-                obj.setTComments(rd.getValue(String.class, "t_comments"));  // t <- q
+                obj.setTId(rd.getInteger("t_id"));  // t <- q
+                obj.setGId(rd.getInteger("g_id"));  // t <- q
+                obj.setTPriority(rd.getInteger("t_priority"));  // t <- q
+                obj.setTDate(rd.getString("t_date"));  // t <- q
+                obj.setTSubject(rd.getString("t_subject"));  // t <- q
+                obj.setTComments(rd.getString("t_comments"));  // t <- q
                 res.add(obj);
             }
         }, t_id);

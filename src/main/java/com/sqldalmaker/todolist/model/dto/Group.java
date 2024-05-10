@@ -5,23 +5,23 @@ package com.sqldalmaker.todolist.model.dto;
 
 public class Group  {
 
-    private java.lang.Integer gId;  // t
-    private java.lang.String gName;  // t
+    private Integer gId;  // t
+    private String gName;  // t
     private Integer gTasksCount;  // xml(g_tasks_count)
 
-    public java.lang.Integer getGId() {
+    public Integer getGId() {
         return this.gId;
     }
 
-    public void setGId(java.lang.Integer gId) {
+    public void setGId(Integer gId) {
         this.gId = gId;
     }
 
-    public java.lang.String getGName() {
+    public String getGName() {
         return this.gName;
     }
 
-    public void setGName(java.lang.String gName) {
+    public void setGName(String gName) {
         this.gName = gName;
     }
 

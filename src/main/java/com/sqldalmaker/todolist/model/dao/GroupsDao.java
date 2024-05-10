@@ -67,8 +67,8 @@ public class GroupsDao {
             @Override
             public void handleRow(DataStore.RowData rd) throws Exception {
                 Group obj = new Group();
-                obj.setGId(rd.getValue(Integer.class, "g_id"));  // t <- q
-                obj.setGName(rd.getValue(String.class, "g_name"));  // t <- q
+                obj.setGId(rd.getInteger("g_id"));  // t <- q
+                obj.setGName(rd.getString("g_name"));  // t <- q
                 res.add(obj);
             }
         });

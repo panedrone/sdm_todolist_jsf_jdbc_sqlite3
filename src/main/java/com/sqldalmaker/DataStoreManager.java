@@ -145,8 +145,7 @@ public class DataStoreManager {
 
     public void commit() throws Exception {
         conn.setAutoCommit(true);
-        conn.setAutoCommit(false);
-        // conn.commit();  // not wirking in sqlite
+        // conn.commit();
     }
 
     public void rollback() throws Exception {
@@ -156,28 +155,28 @@ public class DataStoreManager {
     /*
      * Method open() may be used instead of setDataSource (for desktop apps):
      */
-//    public void open() throws Exception {
-//        // To use OracleTypes.CURSOR, uncomment appropriate code in _prepare_call_params(...) below
-//        conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl", "ORDERS", "root");
-//        // conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "ORDERS", "root");
-//        // conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/test", "postgres", "sa");
-//        // conn = DriverManager.getConnection("jdbc:mysql://localhost/sakila", "root", "root");
-//        // conn = DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=AdventureWorks2014", "sa", "root");
-//        // conn = DriverManager.getConnection("jdbc:h2:todo_list", "", "");
-//        // conn = DriverManager.getConnection("jdbc:sqlite:thesaurus.sqlite", "", "");
-//        DatabaseMetaData dmd = conn.getMetaData();
-//        String url = dmd.getURL();
-//        is_oracle = url.contains("oracle");
-//        conn.setAutoCommit(false);
-//    }
-//
-//    /*
-//     * Remove close() for 'live' connections:
-//     */
-//    public void close() throws Exception {
-//        conn.setAutoCommit(true);
-//        conn.close();
-//    }
+    public void open() throws Exception {
+        // To use OracleTypes.CURSOR, uncomment appropriate code in _prepare_call_params(...) below
+        conn = DriverManager.getConnection("jdbc:sqlite:./log.sqlite", "", "");
+        // conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "ORDERS", "root");
+        // conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/test", "postgres", "sa");
+        // conn = DriverManager.getConnection("jdbc:mysql://localhost/sakila", "root", "root");
+        // conn = DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=AdventureWorks2014", "sa", "root");
+        // conn = DriverManager.getConnection("jdbc:h2:todo_list", "", "");
+        // conn = DriverManager.getConnection("jdbc:sqlite:thesaurus.sqlite", "", "");
+        DatabaseMetaData dmd = conn.getMetaData();
+        String url = dmd.getURL();
+        is_oracle = url.contains("oracle");
+        conn.setAutoCommit(false);
+    }
+
+    /*
+     * Remove close() for 'live' connections:
+     */
+    public void close() throws Exception {
+        conn.setAutoCommit(true);
+        conn.close();
+    }
 
     private final MyDataStore ds = new MyDataStore();
 
@@ -216,7 +215,7 @@ public class DataStoreManager {
         private boolean is_jdbc_stored_proc_call(String jdbc_sql) {
             jdbc_sql = jdbc_sql.trim();
             String[] parts1 = jdbc_sql.split("\\s+");
-            if (parts1.length > 0 && parts1[0].trim().toLowerCase().equals("begin")) {
+            if (parts1.length > 0 && parts1[0].trim().equalsIgnoreCase("begin")) {
                 return true; // Oracle PL/SQL
             }
             // SQL Server requires {...} syntax for CALL
@@ -317,7 +316,7 @@ public class DataStoreManager {
         @Override
         public <T> T query(final Class<T> type, String sql, Object... params) throws Exception {
             List<T> list = queryList(type, sql, params);
-            if (list == null || list.size() == 0) {
+            if (list.size() == 0) {
                 throw new SQLException("No rows: " + sql); // return null; as alternative
             }
             if (list.size() > 1) {
@@ -393,10 +392,10 @@ public class DataStoreManager {
                 }
             }, params);
             if (rows.size() == 0) {
-                throw new Exception ("No rows");
+                throw new Exception("No rows");
             }
             if (rows.size() > 1) {
-                throw new Exception ("'More than 1 row exists");
+                throw new Exception("'More than 1 row exists");
             }
             return rows.get(0);
         }
@@ -414,12 +413,7 @@ public class DataStoreManager {
                     if (value instanceof ResultSet) {
                         while (true) {
                             final ResultSet rs_value = (ResultSet) value;
-                            RowData rowData = new RowData() {
-                                @Override
-                                public <V> V getValue(Class<V> type, String columnLabel) throws Exception {
-                                    return type.cast(rs_value.getObject(columnLabel));
-                                }
-                            };
+                            RowData rowData = new RsRowData(rs_value);
                             try {
                                 while (rs_value.next()) {
                                     _process_row(rowData, row_handler);
@@ -439,12 +433,7 @@ public class DataStoreManager {
                             }
                         }
                     } else {
-                        RowData row_data = new RowData() {
-                            @Override
-                            public <V> V getValue(Class<V> type, String columnLabel) throws Exception {
-                                return type.cast(rs.getObject(columnLabel));
-                            }
-                        };
+                        RowData row_data = new RsRowData(rs);
                         _process_row(row_data, row_handler); // 1st row is already fetched by rs.next()
                         while (rs.next()) { // fetch the rest
                             _process_row(row_data, row_handler);
@@ -571,7 +560,7 @@ public class DataStoreManager {
                 if (params[i] instanceof RowHandler) {
                     if (allow_cursor_params) {
                         // uncomment/comment lines below if you are not on Oracle:
-                        throw new SQLException("RowHandler2 params are allowed only for Oracle SYS_REFCURSOR-s");
+                        throw new SQLException("RowHandler params are allowed only for Oracle SYS_REFCURSOR-s");
                         //call_params.add(new OutParam<Object>(OracleTypes.CURSOR, Object.class));
                         //query_out_cursors = true;
                     } else {
@@ -638,6 +627,110 @@ public class DataStoreManager {
             }
         }
 
+        private class RsRowData implements RowData {
+
+            final ResultSet rs;
+
+            RsRowData(ResultSet rs) {
+                this.rs = rs;
+            }
+
+            @Override
+            public <T> T getValue(Class<T> type, String columnLabel) throws Exception {
+                return type.cast(rs.getObject(columnLabel));
+            }
+
+            @Override
+            public Short getShort(String columnLabel) throws Exception {
+                short res = rs.getShort(columnLabel);
+                if (rs.wasNull()) {
+                    return null;
+                }
+                return res;
+            }
+
+            @Override
+            public Integer getInteger(String columnLabel) throws Exception {
+                int res = rs.getInt(columnLabel);
+                if (rs.wasNull()) {
+                    return null;
+                }
+                return res;
+            }
+
+            @Override
+            public Long getLong (String columnLabel) throws Exception {
+                long res = rs.getLong(columnLabel);
+                if (rs.wasNull()) {
+                    return null;
+                }
+                return res;
+            }
+
+            @Override
+            public Float getFloat(String columnLabel) throws Exception {
+                float res = rs.getFloat(columnLabel);
+                if (rs.wasNull()) {
+                    return null;
+                }
+                return res;
+            }
+
+            @Override
+            public Double getDouble(String columnLabel) throws Exception { // Android
+                double res = rs.getDouble(columnLabel);
+                if (rs.wasNull()) {
+                    return null;
+                }
+                return res;
+            }
+
+            @Override
+            public BigDecimal getBigDecimal(String columnLabel) throws Exception {
+                BigDecimal res = rs.getBigDecimal(columnLabel);
+                if (rs.wasNull()) {
+                    return null;
+                }
+                return res;
+            }
+
+            @Override
+            public String getString (String columnLabel) throws Exception {
+                String res = rs.getString(columnLabel);
+                if (rs.wasNull()) {
+                    return null;
+                }
+                return res;
+            }
+
+            @Override
+            public java.util.Date getDate(String columnLabel) throws Exception {
+                Date res = rs.getDate(columnLabel);
+                if (rs.wasNull()) {
+                    return null;
+                }
+                return res;
+            }
+
+            @Override
+            public byte[] getBytes(String columnLabel) throws Exception { // Android
+                byte[] res = rs.getBytes(columnLabel);
+                if (rs.wasNull()) {
+                    return null;
+                }
+                return res;
+            }
+
+            @Override
+            public Boolean getBoolean(String columnLabel) throws Exception {
+                boolean res = rs.getBoolean(columnLabel);
+                if (rs.wasNull()) {
+                    return null;
+                }
+                return res;
+            }
+        }
+
         public int _execute_call(Connection conn, String sql, final Object... params) throws Exception {
             final CallableStatement stmt = conn.prepareCall(sql);
             try {
@@ -655,12 +748,7 @@ public class DataStoreManager {
                         if (params[i] instanceof RowHandler) {
                             final RowHandler rh = (RowHandler) params[i];
                             final ResultSet rs_cursor = (ResultSet) stmt.getObject(i + 1);
-                            final RowData row_data = new RowData() {
-                                @Override
-                                public <V> V getValue(Class<V> type, String columnLabel) throws Exception {
-                                    return type.cast(rs_cursor.getObject(columnLabel));
-                                }
-                            };
+                            final RowData row_data = new RsRowData(rs_cursor);
                             try {
                                 while (rs_cursor.next()) {
                                     try {
@@ -708,12 +796,7 @@ public class DataStoreManager {
                             }
 
                             public void fetch_all() throws SQLException {
-                                final RowData row_data = new RowData() {
-                                    @Override
-                                    public <V> V getValue(Class<V> type, String columnLabel) throws Exception {
-                                        return type.cast(rs_implicit.getObject(columnLabel));
-                                    }
-                                };
+                                final RowData row_data = new RsRowData(rs_implicit);
                                 //
                                 // Oracle wants stmt.execute() --> getMoreResults() --> getResultSet()
                                 // MySQL wants executeQuery() first
@@ -724,7 +807,7 @@ public class DataStoreManager {
                                         if (params[i] instanceof RowHandler[]) {
                                             RowHandler[] rh_arr = (RowHandler[]) params[i];
                                             int rh_index = 0;
-                                            while (stmt.getMoreResults()) { // move trough result-sets
+                                            while (stmt.getMoreResults()) { // move through result-sets
                                                 rs_implicit = stmt.getResultSet();
                                                 fetch(row_data, rh_arr[rh_index]);
                                                 rh_index++;
@@ -737,7 +820,7 @@ public class DataStoreManager {
                                         if (params[i] instanceof RowHandler[]) {
                                             RowHandler[] rh_arr = (RowHandler[]) params[i];
                                             int rh_index = 0;
-                                            while (true) { // move trough result-sets
+                                            while (true) { // move through result-sets
                                                 fetch(row_data, rh_arr[rh_index]);
                                                 rh_index++;
                                                 if (stmt.getMoreResults()) {

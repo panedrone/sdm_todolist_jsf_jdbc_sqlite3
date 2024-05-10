@@ -5,58 +5,58 @@ package com.sqldalmaker.todolist.model.dto;
 
 public class Task  {
 
-    private java.lang.Integer tId;  // t
-    private java.lang.Integer gId;  // t
-    private java.lang.Integer tPriority;  // t
-    private java.lang.String tDate;  // t
-    private java.lang.String tSubject;  // t
-    private java.lang.String tComments;  // t
+    private Integer tId;  // t
+    private Integer gId;  // t
+    private Integer tPriority;  // t
+    private String tDate;  // t
+    private String tSubject;  // t
+    private String tComments;  // t
 
-    public java.lang.Integer getTId() {
+    public Integer getTId() {
         return this.tId;
     }
 
-    public void setTId(java.lang.Integer tId) {
+    public void setTId(Integer tId) {
         this.tId = tId;
     }
 
-    public java.lang.Integer getGId() {
+    public Integer getGId() {
         return this.gId;
     }
 
-    public void setGId(java.lang.Integer gId) {
+    public void setGId(Integer gId) {
         this.gId = gId;
     }
 
-    public java.lang.Integer getTPriority() {
+    public Integer getTPriority() {
         return this.tPriority;
     }
 
-    public void setTPriority(java.lang.Integer tPriority) {
+    public void setTPriority(Integer tPriority) {
         this.tPriority = tPriority;
     }
 
-    public java.lang.String getTDate() {
+    public String getTDate() {
         return this.tDate;
     }
 
-    public void setTDate(java.lang.String tDate) {
+    public void setTDate(String tDate) {
         this.tDate = tDate;
     }
 
-    public java.lang.String getTSubject() {
+    public String getTSubject() {
         return this.tSubject;
     }
 
-    public void setTSubject(java.lang.String tSubject) {
+    public void setTSubject(String tSubject) {
         this.tSubject = tSubject;
     }
 
-    public java.lang.String getTComments() {
+    public String getTComments() {
         return this.tComments;
     }
 
-    public void setTComments(java.lang.String tComments) {
+    public void setTComments(String tComments) {
         this.tComments = tComments;
     }
 }
