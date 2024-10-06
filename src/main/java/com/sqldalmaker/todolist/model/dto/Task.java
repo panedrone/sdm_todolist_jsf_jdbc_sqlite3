@@ -5,27 +5,27 @@ package com.sqldalmaker.todolist.model.dto;
 
 public class Task  {
 
-    private Integer tId;  // t
-    private Integer gId;  // t
+    private Integer tID;  // t
+    private Integer gID;  // t
     private Integer tPriority;  // t
     private String tDate;  // t
     private String tSubject;  // t
     private String tComments;  // t
 
-    public Integer getTId() {
-        return this.tId;
+    public Integer getTID() {
+        return this.tID;
     }
 
-    public void setTId(Integer tId) {
-        this.tId = tId;
+    public void setTID(Integer tID) {
+        this.tID = tID;
     }
 
-    public Integer getGId() {
-        return this.gId;
+    public Integer getGID() {
+        return this.gID;
     }
 
-    public void setGId(Integer gId) {
-        this.gId = gId;
+    public void setGID(Integer gID) {
+        this.gID = gID;
     }
 
     public Integer getTPriority() {

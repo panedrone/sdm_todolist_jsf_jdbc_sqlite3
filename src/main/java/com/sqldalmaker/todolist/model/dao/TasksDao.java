@@ -26,8 +26,8 @@ public class TasksDao {
         String sql = "insert into tasks (g_id, t_priority, t_date, t_subject, t_comments) values (?, ?, ?, ?, ?)";
         String[] gen_col_nm = new String[]{"t_id"};
         Object[] gen_values = new Object[gen_col_nm.length];
-        int res = ds.insert(sql, gen_col_nm, gen_values, p.getGId(), p.getTPriority(), p.getTDate(), p.getTSubject(), p.getTComments());
-        p.setTId(ds.castGeneratedValue(Integer.class, gen_values[0]));
+        int res = ds.insert(sql, gen_col_nm, gen_values, p.getGID(), p.getTPriority(), p.getTDate(), p.getTSubject(), p.getTComments());
+        p.setTID(ds.castGeneratedValue(Integer.class, gen_values[0]));
         return res;
     }
 
@@ -37,25 +37,25 @@ public class TasksDao {
      */
     public int updateTask(Task p) throws Exception {
         String sql = "update tasks set g_id=?, t_priority=?, t_date=?, t_subject=?, t_comments=? where t_id=?";
-        return ds.execDML(sql, p.getGId(), p.getTPriority(), p.getTDate(), p.getTSubject(), p.getTComments(), p.getTId());
+        return ds.execDML(sql, p.getGID(), p.getTPriority(), p.getTDate(), p.getTSubject(), p.getTComments(), p.getTID());
     }
 
     /*
         CR(U)D: tasks
         Returns the number of affected rows or -1 on error.
      */
-    public int updateTask(Integer gId, Integer tPriority, String tDate, String tSubject, String tComments, Integer tId) throws Exception {
+    public int updateTask(Integer gID, Integer tPriority, String tDate, String tSubject, String tComments, Integer tID) throws Exception {
         String sql = "update tasks set g_id=?, t_priority=?, t_date=?, t_subject=?, t_comments=? where t_id=?";
-        return ds.execDML(sql, gId, tPriority, tDate, tSubject, tComments, tId);
+        return ds.execDML(sql, gID, tPriority, tDate, tSubject, tComments, tID);
     }
 
     /*
         CRU(D): tasks
         Returns the number of affected rows or -1 on error.
      */
-    public int deleteTask(Integer tId) throws Exception {
+    public int deleteTask(Integer tID) throws Exception {
         String sql = "delete from tasks where t_id=?";
-        return ds.execDML(sql, tId);
+        return ds.execDML(sql, tID);
     }
 
     public List<Task> getGroupTasks(int t_id) throws Exception {
@@ -66,8 +66,8 @@ public class TasksDao {
             @Override
             public void handleRow(DataStore.RowData rd) throws Exception {
                 Task obj = new Task();
-                obj.setTId(rd.getInteger("t_id"));  // t <- q
-                obj.setGId(rd.getInteger("g_id"));  // t <- q
+                obj.setTID(rd.getInteger("t_id"));  // t <- q
+                obj.setGID(rd.getInteger("g_id"));  // t <- q
                 obj.setTPriority(rd.getInteger("t_priority"));  // t <- q
                 obj.setTDate(rd.getString("t_date"));  // t <- q
                 obj.setTSubject(rd.getString("t_subject"));  // t <- q

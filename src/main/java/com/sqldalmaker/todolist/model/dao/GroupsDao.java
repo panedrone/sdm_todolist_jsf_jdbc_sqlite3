@@ -27,7 +27,7 @@ public class GroupsDao {
         String[] gen_col_nm = new String[]{"g_id"};
         Object[] gen_values = new Object[gen_col_nm.length];
         int res = ds.insert(sql, gen_col_nm, gen_values, p.getGName());
-        p.setGId(ds.castGeneratedValue(Integer.class, gen_values[0]));
+        p.setGID(ds.castGeneratedValue(Integer.class, gen_values[0]));
         return res;
     }
 
@@ -37,25 +37,25 @@ public class GroupsDao {
      */
     public int updateGroup(Group p) throws Exception {
         String sql = "update groups set g_name=? where g_id=?";
-        return ds.execDML(sql, p.getGName(), p.getGId());
+        return ds.execDML(sql, p.getGName(), p.getGID());
     }
 
     /*
         CR(U)D: groups
         Returns the number of affected rows or -1 on error.
      */
-    public int updateGroup(String gName, Integer gId) throws Exception {
+    public int updateGroup(String gName, Integer gID) throws Exception {
         String sql = "update groups set g_name=? where g_id=?";
-        return ds.execDML(sql, gName, gId);
+        return ds.execDML(sql, gName, gID);
     }
 
     /*
         CRU(D): groups
         Returns the number of affected rows or -1 on error.
      */
-    public int deleteGroup(Integer gId) throws Exception {
+    public int deleteGroup(Integer gID) throws Exception {
         String sql = "delete from groups where g_id=?";
-        return ds.execDML(sql, gId);
+        return ds.execDML(sql, gID);
     }
 
     public List<Group> getGroups() throws Exception {
@@ -67,7 +67,7 @@ public class GroupsDao {
             @Override
             public void handleRow(DataStore.RowData rd) throws Exception {
                 Group obj = new Group();
-                obj.setGId(rd.getInteger("g_id"));  // t <- q
+                obj.setGID(rd.getInteger("g_id"));  // t <- q
                 obj.setGName(rd.getString("g_name"));  // t <- q
                 res.add(obj);
             }
