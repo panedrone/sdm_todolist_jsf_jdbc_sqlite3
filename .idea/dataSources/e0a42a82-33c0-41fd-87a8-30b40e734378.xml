@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="H2 - todo_list">
-  <database-model serializer="dbm" dbms="H2" family-id="H2" format-version="4.54">
+  <database-model serializer="dbm" dbms="H2" family-id="H2" format-version="4.55">
     <root id="1"/>
     <database id="2" parent="1" name="TODO_LIST"/>
     <schema id="3" parent="2" name="INFORMATION_SCHEMA"/>
